@@ -20,7 +20,7 @@ class User
   field :encrypted_password, :type => String, :default => ""
 
   validates_presence_of :email
-
+  # validates_format_of :email, :with => /\A[\w+\-.]+@qq\.com/i, :message => "只能是QQ邮箱"
   ## Recoverable
   field :reset_password_token,   :type => String
   field :reset_password_sent_at, :type => Time

@@ -64,9 +64,9 @@
     replies_count: "回复"
     likes_count: 喜欢
   reply:
-    edit_reply: "修改回帖"
-    delete_reply_success: '回帖删除成功.'
-    topic_location: '回帖所在文章'
+    edit_reply: "修改回复"
+    delete_reply_success: '回复删除成功.'
+    topic_location: '回复所在文章'
   photos:
     upload_and_insert_code: "上传并插入代码"
     uploading: "正在上传"
@@ -94,13 +94,13 @@
     you_have_successfully: "你已经成功在"
     registered_an_account: "注册了账号。"
   rss:
-    recent_topics_description: "%{name}社区最新发帖."
+    recent_topics_description: "%{name}社区最新话题."
     recent_topics_title: "%{name}社区"
-    recent_node_topics_description: "%{name} 社区 %{node_name} 节点最新发帖."
+    recent_node_topics_description: "%{name} 社区 %{node_name} 节点最新话题."
     recent_node_topics_title: "%{name} 社区 %{node_name} 节点"
   site_config:
     new_topic_dropdown_node_ids: "Sidebar 新建话题按钮，下拉显示的节点(node_id)，逗号隔开如 (1,3,4)"
-    node_ids_hide_in_topics_index: "要在论坛首页列表隐藏的节点,以逗号隔开"
+    node_ids_hide_in_topics_index: "要在社区首页列表隐藏的节点,以逗号隔开"
     custom_head_html: "自定 HTML head 区域的内容"
     site_index_html: "酷站列表首页头的 HTML"
     topic_index_sidebar_html: "话题列表首页边栏 HTML"
@@ -110,4 +110,4 @@
     wiki_index_html: "WIKI 首页 HTMl"
     index_html: "网站首页 HTML"
     tips: "随机显示的小贴士（一行一个）"
-    ban_words_on_reply: "回帖禁止内容（一行一个）"
+    ban_words_on_reply: "回复禁止内容（一行一个）"

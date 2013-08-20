@@ -30,7 +30,7 @@
   <meta name="keywords" content="<%= @meta_keywords %>" />
   <meta name="description" content="<%= @meta_description %>" />
   <meta charset='utf-8' />
-  <link rel="shortcut icon" href="<%= asset_path("big_logo.png") %>" />
+  <link rel="shortcut icon" href="<%= asset_path(Setting.big_logo) %>" />
   <%= raw SiteConfig.custom_head_html %>
   <%= csrf_meta_tag %>
   <%= auto_discovery_link_tag(:rss,feed_topics_url,:title => '订阅最新帖') %>
@@ -42,7 +42,7 @@
     <div class="navbar-inner">
       <div class="container">
         <h3>
-          <a href="/"><%= image_tag("text_logo.png", :style => "width:123px;height:29px;") %></a>
+          <a href="/"><%= image_tag(Setting.text_logo, :style => "width:123px;height:29px;") %></a>
         </h3>
         <%= render_list :class => "nav" do |li|
            li << link_to(t("menu.topics"), topics_path)
