@@ -8,9 +8,6 @@ SiteConfig.save_default("index_html",<<-eos
 <div class="box" style="text-align:center;">
   <p><img alt="Big_logo" src="/assets/big_logo.png"></p>
   <p></p>
-  <p>Ruby China Group， 致力于构建完善的 Ruby 中文社区。</p>
-  <p>功能正在完善中，欢迎 <a href="http://github.com/huacnlee/ruby-china">贡献代码</a> 。</p>
-  <p>诚邀有激情的活跃 Ruby 爱好者参与维护社区，联系 <b style="color:#c00;">lgn21st@gmail.com</b></p>
 </div>
 eos
 )
@@ -26,7 +23,7 @@ eos
 # Footer HTML
 SiteConfig.save_default("footer_html",<<-eos
 <p class="copyright">
- &copy; Ruby China Group.
+ &copy; 
 </p>
 eos
 )
@@ -34,8 +31,6 @@ eos
 # 话题后面的HTML代码
 SiteConfig.save_default("after_topic_html",<<-eos
 <div class="share_links">
- <a href="https://twitter.com/share" class="twitter-share-button" data-count="none"">Tweet</a>
- <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 </div>
 eos
 )
@@ -75,7 +70,7 @@ SiteConfig.save_default("custom_head_html",<<-eos
 eos
 )
 
-# 要在论坛首页列表隐藏的节点,以逗号隔开
+# 要在社区首页列表隐藏的节点,以逗号隔开
 SiteConfig.save_default("node_ids_hide_in_topics_index","")
 
 # Sidebar 新建话题按钮，下拉显示的节点列表
@@ -87,10 +82,10 @@ SiteConfig.save_default("ban_words_on_reply","mark\n收藏\n顶\n赞\nup\n")
 # 随机显示的 tip 信息
 SiteConfig.save_default("tips","提示1\n提示2")
 
-SiteConfig.save_default("newbie_notices",%(<p>为提高社区质量，防止新人一来就发帖提问接触 Ruby 遇到的问题，新用户需要达到下面条件才可发帖：</p>
+SiteConfig.save_default("newbie_notices",%(<p>为提高社区质量，防止新人一来就发表话题提问接触 Ruby 遇到的问题，新用户需要达到下面条件才可发表话题：</p>
     <ol style="color:#ad2b2d;">
       <li>注册时间超过一个月；</li>
-      <li>回帖数量必须达到 10 贴以上；</li>
+      <li>回复数量必须达到 10 个以上；</li>
     </ol>
     <p>请在新人阶段多浏览，看看其他老用户是如何在社区里面分享与解决问题的。</p>))
 
