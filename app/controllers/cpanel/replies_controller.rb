@@ -9,7 +9,7 @@ class Cpanel::RepliesController < Cpanel::ApplicationController
     @reply = Reply.find(params[:id])
 
     if @reply.topic.blank?
-      redirect_to cpanel_replies_path, :alert => "帖子已经不存在"
+      redirect_to cpanel_replies_path, :alert => "话题已经不存在"
     end
   end
 

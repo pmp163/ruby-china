@@ -20,7 +20,7 @@ class User
   field :encrypted_password, :type => String, :default => ""
 
   validates_presence_of :email
-  # validates_format_of :email, :with => /\A[\w+\-.]+@qq\.com/i, :message => "只能是QQ邮箱"
+  # validates_format_of :email, :with => /\A[\w+\-.]+@qq\.com/i, :message => "只能使用QQ邮箱注册"
   ## Recoverable
   field :reset_password_token,   :type => String
   field :reset_password_sent_at, :type => Time
@@ -137,12 +137,12 @@ class User
     self.admin? or self.verified == true
   end
   
-  # 回帖大于 150 的才有酷站的发布权限
+  # 回复大于 150 的才有酷站的发布权限
   def site_editor?
     self.admin? or self.replies_count >= 100
   end
   
-  # 是否能发帖
+  # 是否能发表话题
   def newbie?
     return false if self.verified == true
     self.created_at > 1.week.ago

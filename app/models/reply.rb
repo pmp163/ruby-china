@@ -33,7 +33,7 @@ class Reply
   validate do
     ban_words = (SiteConfig.ban_words_on_reply || "").split("\n").collect { |word| word.strip }
     if self.body.strip.downcase.in?(ban_words)
-      self.errors.add(:body,"请勿回复无意义的内容，如你想收藏或赞这篇帖子，请用帖子后面的功能。")
+      self.errors.add(:body,"请勿回复无意义的内容，如你想收藏或赞这个话题，请用话题后面的功能。")
     end
   end
   
@@ -67,7 +67,7 @@ class Reply
     
     notified_user_ids = reply.mentioned_user_ids
     
-    # 给发帖人发回帖通知
+    # 给发表话题人发回复通知
     if reply.user_id != topic.user_id && !notified_user_ids.include?(topic.user_id)
       Notification::TopicReply.create :user_id => topic.user_id, :reply_id => reply.id
       notified_user_ids << topic.user_id
@@ -79,7 +79,7 @@ class Reply
     topic.follower_ids.each do |uid|
       # 排除同一个回复过程中已经提醒过的人
       next if notified_user_ids.include?(uid)
-      # 排除回帖人
+      # 排除回复人
       next if uid == reply.user_id
       puts "Post Notification to: #{uid}"
       Notification::TopicReply.create :user_id => uid, :reply_id => reply.id

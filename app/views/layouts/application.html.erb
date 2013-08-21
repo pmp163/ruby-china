@@ -33,7 +33,7 @@
   <link rel="shortcut icon" href="<%= asset_path(Setting.big_logo) %>" />
   <%= raw SiteConfig.custom_head_html %>
   <%= csrf_meta_tag %>
-  <%= auto_discovery_link_tag(:rss,feed_topics_url,:title => '订阅最新帖') %>
+  <%= auto_discovery_link_tag(:rss,feed_topics_url,:title => '订阅最新话题') %>
 
   <%= yield :node_feed_link %>
 </head>
