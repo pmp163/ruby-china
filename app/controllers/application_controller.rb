@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   def check_expire
     return if current_user.blank?
     if current_user[:state] != User::STATE[:normal]
-	sign_out_and_redirect(current_user)
+	sign_out_and_redirect("/login")
     end
   end
 
