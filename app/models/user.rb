@@ -277,13 +277,13 @@ class User
   # 只是把用户信息修改了
   def soft_delete
     # assuming you have deleted_at column added already
-    self.email = "#{self.login}_#{self.id}@ruby-china.org"
-    self.login = "Guest"
-    self.bio = ""
-    self.website = ""
-    self.github = ""
-    self.tagline = ""
-    self.location = ""
+    #self.email = "#{self.login}_#{self.id}@qq.com"
+    #self.login = "Guest"
+    #self.bio = ""
+    #self.website = ""
+    #self.github = ""
+    #self.tagline = ""
+    #self.location = ""
     self.authorizations = []
     self.state = STATE[:deleted]
     self.save(:validate => false)
