@@ -14,6 +14,13 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(*User::ACCESSABLE_ATTRS) }
     end
   end
+  before_filter :check_expire
+  def check_expire
+    return if current_user.blank?
+    if current_user[:state] != User::STATE[:normal]
+	sign_out_and_redirect(current_user)
+    end
+  end
 
   def render_404
     render_optional_error_file(404)
