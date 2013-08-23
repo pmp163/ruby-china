@@ -1,5 +1,6 @@
 #= require jquery
 #= require jquery_ujs
+#= require jquery.turbolinks
 #= require bootstrap-transition
 #= require bootstrap-alert
 #= require bootstrap-modal
@@ -16,17 +17,19 @@
 #= require jquery.html5-fileupload
 #= require social-share-button
 #= require jquery.atwho
+#= require nprogress
 #= require emoji_list
 #= require faye
 #= require notifier
 #= require sisyphus
+#= require turbolinks
 #= require_self
 window.App =
   notifier : null,
-  
+
   loading : () ->
     console.log "loading..."
-    
+
   fixUrlDash : (url) ->
     url.replace(/\/\//g,"/").replace(/:\//,"://")
 
@@ -45,7 +48,7 @@ window.App =
 
   # Use this method to redirect so that it can be stubbed in test
   gotoUrl: (url) ->
-    window.location = url
+    Turbolinks.visit(url)
 
   likeable : (el) ->
     $el = $(el)
@@ -87,9 +90,11 @@ window.App =
 
   atReplyable : (el, logins) ->
     return if logins.length == 0
-    $(el).atWho "@",
+    $(el).atwho 
+      at : "@"
       data : logins
       tpl : "<li data-value='${login}'>${login} <small>${name}</small></li>"
+    true
 
   initForDesktopView : () ->
     return if typeof(app_mobile) != "undefined"
@@ -125,41 +130,48 @@ window.App =
         span.removeClass("badge-error")
       span.text(json.count)
       $(document).attr("title", new_title)
-    true  
+    true
 
+  init : () ->
+    App.initForDesktopView()
+
+    $('form.new_topic,form.new_reply,form.new_note,form.new_page').sisyphus
+      timeout : 2
+      excludeFields : $('input[name=utf8], input[name=_method], input[name=authenticity_token]')
+    $('form a.reset').click ->
+      $.sisyphus().manuallyReleaseData()
+
+    $("abbr.timeago").timeago()
+    $(".alert").alert()
+    $('.dropdown-toggle').dropdown()
+
+    # 绑定评论框 Ctrl+Enter 提交事件
+    $(".cell_comments_new textarea").bind "keydown","ctrl+return",(el) ->
+      if $(el.target).val().trim().length > 0
+        $(el.target).parent().parent().submit()
+      return false
+
+    # Choose 样式
+    $("select").chosen()
+
+    # Go Top
+    $("a.go_top").click () ->
+      $('html, body').animate({ scrollTop: 0 },300);
+      return false
+
+    # Go top
+    $(window).bind 'scroll resize', ->
+      scroll_from_top = $(window).scrollTop()
+      if scroll_from_top >= 1
+        $("a.go_top").show()
+      else
+        $("a.go_top").hide()
+
+# NProgress
+$(document).on 'page:fetch', ->
+  NProgress.start()
+$(document).on 'page:restore', ->
+  NProgress.remove()
 $(document).ready ->
-  App.initForDesktopView()
-
-  $("abbr.timeago").timeago()
-  $(".alert").alert()
-  $('.dropdown-toggle').dropdown()
-
-  App.initNotificationSubscribe() if FAYE_SERVER_URL?
-
-  $('form.new_topic,form.new_reply,form.new_note,form.new_page').sisyphus
-    timeout : 2
-    excludeFields : $('input[name=utf8], input[name=_method], input[name=authenticity_token]')
-  $('form a.reset').click ->
-    $.sisyphus().manuallyReleaseData()
-      
-  
-  # 绑定评论框 Ctrl+Enter 提交事件
-  $(".cell_comments_new textarea").bind "keydown","ctrl+return",(el) ->
-    if $(el.target).val().trim().length > 0
-      $(el.target).parent().parent().submit()
-    return false
-
-  # Choose 样式
-  $("select").chosen()
-
-  # Go Top
-  $("a.go_top").click () ->
-    $('html, body').animate({ scrollTop: 0 },300);
-    return false
-
-  $(window).bind 'scroll resize', ->
-    scroll_from_top = $(window).scrollTop()
-    if scroll_from_top >= 1
-      $("a.go_top").show()
-    else
-      $("a.go_top").hide()
+  App.init()
+  NProgress.done()

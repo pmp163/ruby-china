@@ -1,23 +1,24 @@
 # TopicsController 下所有页面的 JS 功能
 window.Topics =
-  replies_per_page: 50  
+  replies_per_page: 50
 
   # 往话题编辑器里面插入图片代码
   appendImageFromUpload : (srcs) ->
     txtBox = $(".topic_editor")
-    caret_pos = txtBox.caretPos()
+    caret_pos = txtBox.caret('pos')
     src_merged = ""
     for src in srcs
       src_merged = "![](#{src})\n"
     source = txtBox.val()
     before_text = source.slice(0, caret_pos)
     txtBox.val(before_text + src_merged + source.slice(caret_pos+1, source.count))
-    txtBox.caretPos(caret_pos+src_merged.length)
+    txtBox.caret('pos',caret_pos + src_merged.length)
     txtBox.focus()
 
   # 上传图片
   initUploader : () ->
     $("#topic_add_image").bind "click", () ->
+      $(".topic_editor").focus()
       $("#topic_upload_images").click()
       return false
 
@@ -28,7 +29,7 @@ window.Topics =
         $("#topic_add_image").hide()
         $("#topic_add_image").before("<span class='loading'>上传中...</span>")
       success : (result, status, xhr) ->
-        $("#topic_add_image").parent().find("span").remove()
+        $("#topic_add_image").parent().find("span.loading").remove()
         $("#topic_add_image").show()
         Topics.appendImageFromUpload([result])
 
@@ -172,7 +173,7 @@ window.Topics =
       $(el).data("followed", true)
       $("i",el).attr("class", "icon small_followed")
     false
-    
+
   submitTextArea : (el) ->
     if $(el.target).val().trim().length > 0
       $("#reply > form").submit()
@@ -181,69 +182,66 @@ window.Topics =
   # 往话题编辑器里面插入代码模版
   appendCodesFromHint : (language='') ->
     txtBox = $(".topic_editor")
-    caret_pos = txtBox.caretPos() 
-    prefix_break = ""  
+    caret_pos = txtBox.caret('pos')
+    prefix_break = ""
     if txtBox.val().length > 0
       prefix_break = "\n"
-    src_merged = "#{prefix_break }```#{language}\n\n```\n"    
+    src_merged = "#{prefix_break }```#{language}\n\n```\n"
     source = txtBox.val()
     before_text = source.slice(0, caret_pos)
     txtBox.val(before_text + src_merged + source.slice(caret_pos+1, source.count))
-    txtBox.caretPos(caret_pos + src_merged.length - 5)
-    txtBox.focus()  
+    txtBox.caret('pos',caret_pos + src_merged.length - 5)
+    txtBox.focus()
 
-# pages ready
+  init : ->
+    bodyEl = $("body")
+
+    Topics.initCloseWarning($("textarea.closewarning"))
+
+    $("textarea").bind "keydown","ctrl+return",(el) ->
+      return Topics.submitTextArea(el)
+
+    $("textarea").bind "keydown","Meta+return",(el) ->
+      return Topics.submitTextArea(el)
+
+    $("textarea").autogrow()
+
+    Topics.initUploader()
+
+    $("a.at_floor").on 'click', (e) ->
+      floor = $(this).data('floor')
+      Topics.gotoFloor(floor)
+
+    # also highlight if hash is reply#
+    matchResult = window.location.hash.match(/^#reply(\d+)$/)
+    if matchResult?
+      Topics.highlightReply($("#reply#{matchResult[1]}"))
+
+    $("a.small_reply").on 'click', () ->
+      Topics.reply($(this).data("floor"), $(this).attr("data-login"))
+
+    Topics.hookPreview($(".editor_toolbar"), $(".topic_editor"))
+
+    # pick up one lang and insert it into the textarea
+    $("a.insert_code").on "click", ->
+      # not sure IE supports data or not
+      Topics.appendCodesFromHint($(this).data('content') || $(this).attr('id') )
+
+    bodyEl.bind "keydown", "m", (el) ->
+      $('#markdown_help_tip_modal').modal
+        keyboard : true
+        backdrop : true
+        show : true
+
+    # @ Reply
+    logins = App.scanLogins($("#topic_show .leader a[data-author]"))
+    $.extend logins, App.scanLogins($('#replies span.name a'))
+    logins = ({login: k, name: v} for k, v of logins)
+    console.log logins
+    App.atReplyable("textarea", logins)
+
+    # Focus title field in new-topic page
+    $("body.topics-controller.new-action #topic_title").focus()
+
 $(document).ready ->
-  bodyEl = $("body")
-
-  $("textarea").bind "keydown","ctrl+return",(el) ->
-    return Topics.submitTextArea(el)
-    
-  $("textarea").bind "keydown","Meta+return",(el) ->
-    return Topics.submitTextArea(el)
-
-  Topics.initCloseWarning($("textarea.closewarning"))
-
-  $("textarea").autogrow()
-
-  $("#new_reply").submit () ->
-    $('#btn_reply').button('loading')
-
-  Topics.initUploader()
-
-  $("a.at_floor").live 'click', (e) ->
-    floor = $(this).data('floor')
-    Topics.gotoFloor(floor)
-
-  # also highlight if hash is reply#
-  matchResult = window.location.hash.match(/^#reply(\d+)$/)
-  if matchResult?
-    Topics.highlightReply($("#reply#{matchResult[1]}"))
-
-  $("a.small_reply").live 'click', () ->
-    Topics.reply($(this).data("floor"), $(this).attr("data-login"))
-
-  Topics.hookPreview($(".editor_toolbar"), $(".topic_editor"))
-
-  # pick up one lang and insert it into the textarea
-  $("a.insert_code").on "click", ->
-    # not sure IE supports data or not
-    Topics.appendCodesFromHint($(this).data('content') || $(this).attr('id') )
-
-  bodyEl.bind "keydown", "m", (el) ->
-    $('#markdown_help_tip_modal').modal
-      keyboard : true
-      backdrop : true
-      show : true
-
-  # @ Reply
-  logins = App.scanLogins($("#topic_show .leader a[data-author]"))
-  $.extend logins, App.scanLogins($('#replies span.name a'))
-  logins = ({login: k, name: v} for k, v of logins)
-  console.log logins
-  App.atReplyable("textarea", logins)
-
-  # Focus title field in new-topic page
-  $("body.topics-controller.new-action #topic_title").focus()
-
-  
+  Topics.init()
